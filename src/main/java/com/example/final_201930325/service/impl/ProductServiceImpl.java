@@ -3,11 +3,13 @@ package com.example.final_201930325.service.impl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.example.final_201930325.dao.ProductDAO;
 import com.example.final_201930325.dto.ProductDto;
 import com.example.final_201930325.dto.ProductResponseDto;
 import com.example.final_201930325.entity.Product;
+import com.example.final_201930325.repository.ProductRepository;
 import com.example.final_201930325.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +19,12 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductDAO productDAO;
 
+    private final ProductRepository productRepository;
+
     @Autowired
-    public ProductServiceImpl(ProductDAO productDAO) {
+    public ProductServiceImpl(ProductDAO productDAO, ProductRepository productRepository) {
         this.productDAO = productDAO;
+        this.productRepository = productRepository;
     }
 
     @Override
@@ -120,5 +125,11 @@ public class ProductServiceImpl implements ProductService {
         }
 
         return productResponseDtos;
+    }
+
+    public Product getProductById(String productId) {
+        Long id = Long.parseLong(productId);
+        Optional<Product> optionalProduct = productRepository.findById(id);
+        return optionalProduct.orElse(null);
     }
 }

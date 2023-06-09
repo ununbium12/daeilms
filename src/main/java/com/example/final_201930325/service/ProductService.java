@@ -2,6 +2,7 @@ package com.example.final_201930325.service;
 
 import com.example.final_201930325.dto.ProductDto;
 import com.example.final_201930325.dto.ProductResponseDto;
+import com.example.final_201930325.entity.Product;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface ProductService {
     List<ProductResponseDto> getProductsByName(String name);
 
     void deleteProduct(Long number) throws Exception;
+
+    Product getProductById(String productId);
 }

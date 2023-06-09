@@ -2,7 +2,10 @@ package com.example.final_201930325.controller;
 
 import com.example.final_201930325.dto.OrderDto;
 import com.example.final_201930325.dto.OrderResponseDto;
+import com.example.final_201930325.dto.ProductDto;
+import com.example.final_201930325.entity.Product;
 import com.example.final_201930325.service.OrderService;
+import com.example.final_201930325.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +20,12 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    private final ProductService productService;
+
     @Autowired
-    public OrderController(OrderService orderService) {
+    public OrderController(OrderService orderService, ProductService productService) {
         this.orderService = orderService;
+        this.productService = productService;
     }
 
     @GetMapping("/")
@@ -33,6 +39,15 @@ public class OrderController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderDto orderDto) {
         OrderResponseDto orderResponseDto = orderService.saveOrder(orderDto);
+        Product product = productService.getProductById(orderDto.getProductId());
+        if(product == null || product.getStock() == 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(orderResponseDto);
+        }
+        if (Long.parseLong(orderDto.getProductId()) == product.getNumber() && product.getStock() > 0) {
+            product.setStock(product.getStock() - 1);
+            ProductDto productDto = new ProductDto(product.getName(),product.getPrice(),product.getStock());
+            productService.saveProduct(productDto);
+        }
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 
