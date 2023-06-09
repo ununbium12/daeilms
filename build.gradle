@@ -1,7 +1,8 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.7.13-SNAPSHOT'
+	id 'org.springframework.boot' version '2.7.12'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+	id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
 group = 'com.example'
@@ -39,8 +40,30 @@ dependencies {
 	implementation "io.jsonwebtoken:jjwt-jackson:0.11.5"
 
 	implementation 'org.springdoc:springdoc-openapi-ui:1.6.6'
+	implementation 'org.projectlombok:lombok'
+
+	implementation 'org.jetbrains:annotations:20.1.0'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+//querydsl 추가 시작 (위에 plugin 추가 부분과 맞물림)
+def querydslDir = "$buildDir/generated/querydsl"
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+
+sourceSets { // IDE의 소스 폴더에 자동으로 넣어준다.
+	main.java.srcDir querydslDir
+}
+
+configurations {
+	querydsl.extendsFrom compileClasspath // 컴파일이 될때 같이 수행
+}
+
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl // Q파일을 생성해준다.
+}
+//querydsl 추가 끝

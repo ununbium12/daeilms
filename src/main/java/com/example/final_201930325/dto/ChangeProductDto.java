@@ -1,15 +1,27 @@
 package com.example.final_201930325.dto;
 
-public class ProductDto {
+public class ChangeProductDto {
 
+    private Long number;
     private String name;
     private int price;
     private int stock;
 
-    public ProductDto(String name, int price, int stock) {
+    public ChangeProductDto(Long number, String name, int price, int stock) {
+        this.number = number;
         this.name = name;
         this.price = price;
         this.stock = stock;
+    }
+
+    public ChangeProductDto() {}
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
     }
 
     public String getName() {

@@ -1,7 +1,5 @@
 package com.example.final_201930325.dto;
 
-import com.example.final_201930325.entity.Product;
-
 public class ProductResponseDto {
 
     private Long number;
@@ -16,13 +14,6 @@ public class ProductResponseDto {
         this.name = name;
         this.price = price;
         this.stock = stock;
-    }
-
-    public ProductResponseDto(Product product) {
-        this.number = product.getNumber();
-        this.name = product.getName();
-        this.price = product.getPrice();
-        this.stock = product.getStock();
     }
 
     public Long getNumber() {
