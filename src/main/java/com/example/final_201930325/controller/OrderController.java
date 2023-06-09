@@ -37,7 +37,7 @@ public class OrderController {
 
     @PostMapping("/order")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderDto orderDto) {
+    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderDto orderDto) throws Exception {
         OrderResponseDto orderResponseDto = orderService.saveOrder(orderDto);
         Product product = productService.getProductById(orderDto.getProductId());
         if(product == null || product.getStock() == 0) {
@@ -46,7 +46,7 @@ public class OrderController {
         if (Long.parseLong(orderDto.getProductId()) == product.getNumber() && product.getStock() > 0) {
             product.setStock(product.getStock() - 1);
             ProductDto productDto = new ProductDto(product.getName(),product.getPrice(),product.getStock());
-            productService.saveProduct(productDto);
+            productService.changeProductName(product.getNumber(), product.getName(), product.getPrice(), product.getStock());
         }
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
